@@ -1,22 +1,41 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey,Table
+from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
 
-# Assuming you have the 'Base' instance from SQLAlchemy
 Base = declarative_base()
+engine = create_engine("sqlite:///notetakingdb.db")
+Session = sessionmaker(bind=engine)
+
+note_tag_association = Table(
+    'note_tag_association',
+    Base.metadata,
+    Column('note_id', Integer, ForeignKey('notes.id')),
+    Column('tag_id', Integer, ForeignKey('tags.id'))
+)
 
 class User(Base):
-    __tablename__ = 'users'  # Table name
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True,  autoincrement= True)
+    username = Column(String, unique=True, nullable=False)
+    notes = relationship("Note", back_populates="user")
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    username = Column(String, nullable=False)
-    email = Column(String, nullable=False, unique=True)
 
-class Post(Base):
-    __tablename__ = 'notes'  # Table name
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
+class Note(Base):
+    __tablename__ = "notes"
+    id = Column(Integer, primary_key=True)
     title = Column(String, nullable=False)
     content = Column(String, nullable=False)
-    author_id = Column(Integer, nullable=False)  # Foreign key reference to 'users' table
+    user_id = Column(Integer, ForeignKey("users.id"))
+    tag_id= Column(Integer, ForeignKey("tags.id"))
 
-# More models can be defined here...
+    user = relationship("User", back_populates="notes")
+    tag= relationship("Tag", back_populates="notes")
+
+class Tag(Base):
+    __tablename__ = 'tags'
+    id = Column(Integer, primary_key=True)
+    name = Column(String, unique=True)
+    notes=relationship("Note",back_populates="tag")
+
+Base.metadata.create_all(bind=engine)
