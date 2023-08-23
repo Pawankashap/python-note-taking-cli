@@ -81,7 +81,18 @@ def edit(note_id, title, content, tags):
 
     click.echo('Note edited successfully!')
 
+@cli.command()
+@click.argument('note_id', type=int)
+def delete(note_id):
+    session = Session()
 
+    note = session.query(Note).get(note_id)
+    
+    session.delete(note)
+    session.commit()
+    session.close()
+
+    click.echo('Note deleted successfully!')
 
 @cli.command()
 def interactive():
