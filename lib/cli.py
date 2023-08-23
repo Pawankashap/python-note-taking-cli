@@ -44,7 +44,7 @@ def list_notes():
 
     notes = session.query(Note).all()
     for note in notes:
-        click.echo(f"ID: {note.id}, Title: {note.title}, Tags: {', '.join(tag.name for tag in note.tags)}")
+        click.echo(f"ID: {note.id}, Title: {note.title}, Content: {note.content}, Tags: {', '.join(tag.name for tag in note.tags)}")
 
     session.close()
 
