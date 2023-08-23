@@ -47,7 +47,7 @@ def show_notes():
     notes = session.query(Note).all()
     for note in notes:
         click.echo(f"ID: {note.id}, Title: {note.title}, Content: {note.content}, Tags: {', '.join(tag.name for tag in note.tags)}")
-
+        
     session.close()
 
 
@@ -87,6 +87,10 @@ def delete(note_id):
     session = Session()
 
     note = session.query(Note).get(note_id)
+    if not note:
+        click.echo('Note not found!')
+        session.close()
+        return
     
     session.delete(note)
     session.commit()
