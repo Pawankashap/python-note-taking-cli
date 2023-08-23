@@ -27,15 +27,15 @@ class Note(Base):
     title = Column(String, nullable=False)
     content = Column(String, nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"))
-    tag_id= Column(Integer, ForeignKey("tags.id"))
+    # tag_id= Column(Integer, ForeignKey("tags.id"))
 
     user = relationship("User", back_populates="notes")
-    tag= relationship("Tag", back_populates="notes")
+    tags= relationship("Tag",secondary=note_tag_association, back_populates="notes")
 
 class Tag(Base):
     __tablename__ = 'tags'
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True)
-    notes=relationship("Note",back_populates="tag")
+    notes=relationship("Note",secondary=note_tag_association,back_populates="tags")
 
 Base.metadata.create_all(bind=engine)
