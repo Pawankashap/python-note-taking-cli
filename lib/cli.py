@@ -94,6 +94,7 @@ def interactive():
     if not notes:
         click.echo("No notes available.")
         return
+    
 
     menu = CursesMenu("Notes", "Choose a note:")
 
