@@ -44,3 +44,14 @@ class NoteManager:
                 print("Note added successfully!")
             else:
                 print(f"User {username} not found.")
+
+    def show_notes(self):
+    # session = Session()
+
+        notes = self.session.query(Note).all()
+        for note in notes:
+            click.echo(f"ID: {note.id}, Title: {note.title}, Content: {note.content}, Tags: {', '.join(tag.name for tag in note.tags)}")
+            
+        self.session.close()    
+    
+   
