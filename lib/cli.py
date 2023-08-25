@@ -2,20 +2,24 @@ import click
 from db.models import Session, User, Note, Tag
 from cursesmenu import CursesMenu
 from cursesmenu.items import FunctionItem
+from manager.user_manager import UserManager
+
+notes_list = []
+tags_dict = {}
 
 @click.group()
 def cli():
     pass
 
+
+users_manager = UserManager()
+
+
 @cli.command()
 @click.argument("username")
 def create_user(username):
-    session = Session()
-    user = User(username=username)
-    session.add(user)
-    session.commit()
-    print(f"User {username} created!")
-
+    users_manager.create_user(username)
+    
 @cli.command()
 @click.argument("username")
 @click.argument("title")
@@ -28,14 +32,29 @@ def add_note(username, title, content, tags):
     if user:
         note = Note(title=title, content=content, user=user)
         session.add(note)
-        print(tags)
-        print("run this section")
+        notes_list.append(session)
+        note1 = session.query(Note).first()
+        print(note1)
+        print(notes_list)
         for tag_name in tags:
             tag = session.query(Tag).filter_by(name=tag_name).first()
             if not tag:
                 tag = Tag(name=tag_name)
             note.tags.append(tag)
+        
+        # session.add(notes_list)
+        # # session.commit()
+        # for tag_name in tags:
+        #     tags_dict = session.query(Tag).filter_by(name=tag_name).first()
+        #     if tag_name not in tags_dict:
+        #         tags_dict[tag_name] = []
+        #     tags_dict[tag_name].append(note)
+        #     # note.tags.append(tags_dict)
+        
+    
         session.commit()
+        print(notes_list)
+        print (tags_dict)
         print("Note added successfully!")
     else:
         print(f"User {username} not found.")
