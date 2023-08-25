@@ -3,7 +3,7 @@ from db.models import Session, User, Note, Tag
 from cursesmenu import CursesMenu
 from cursesmenu.items import FunctionItem
 from manager.user_manager import UserManager
-
+from manager.note_manager import NoteManager
 
 
 @click.group()
@@ -12,6 +12,7 @@ def cli():
 
 
 users_manager = UserManager()
+notes_manager = NoteManager()
 
 
 notes_list = []
@@ -29,37 +30,39 @@ def create_user(username):
 # @click.argument("tags")
 @click.option("--tags", "-t", multiple=True, help="Tags separated by commas")
 def add_note(username, title, content, tags):
-    session = Session()
-    user = session.query(User).filter_by(username=username).first()
-    if user:
-        note = Note(title=title, content=content, user=user)
-        session.add(note)
-        notes_list.append(session)
-        note1 = session.query(Note).first()
-        print(note1)
-        print(notes_list)
-        for tag_name in tags:
-            tag = session.query(Tag).filter_by(name=tag_name).first()
-            if not tag:
-                tag = Tag(name=tag_name)
-            note.tags.append(tag)
+    notes_manager.add_note(username, title, content, tags)
+
+    # session = Session()
+    # user = session.query(User).filter_by(username=username).first()
+    # if user:
+    #     note = Note(title=title, content=content, user=user)
+    #     session.add(note)
+    #     notes_list.append(session)
+    #     note1 = session.query(Note).first()
+    #     print(note1)
+    #     print(notes_list)
+    #     for tag_name in tags:
+    #         tag = session.query(Tag).filter_by(name=tag_name).first()
+    #         if not tag:
+    #             tag = Tag(name=tag_name)
+    #         note.tags.append(tag)
         
-        # session.add(notes_list)
-        # # session.commit()
-        # for tag_name in tags:
-        #     tags_dict = session.query(Tag).filter_by(name=tag_name).first()
-        #     if tag_name not in tags_dict:
-        #         tags_dict[tag_name] = []
-        #     tags_dict[tag_name].append(note)
-        #     # note.tags.append(tags_dict)
+    #     # session.add(notes_list)
+    #     # # session.commit()
+    #     # for tag_name in tags:
+    #     #     tags_dict = session.query(Tag).filter_by(name=tag_name).first()
+    #     #     if tag_name not in tags_dict:
+    #     #         tags_dict[tag_name] = []
+    #     #     tags_dict[tag_name].append(note)
+    #     #     # note.tags.append(tags_dict)
         
     
-        session.commit()
-        print(notes_list)
-        print (tags_dict)
-        print("Note added successfully!")
-    else:
-        print(f"User {username} not found.")
+    #     session.commit()
+    #     print(notes_list)
+    #     print (tags_dict)
+    #     print("Note added successfully!")
+    # else:
+    #     print(f"User {username} not found.")
 
 @cli.command()
 def show_notes():
