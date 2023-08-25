@@ -4,8 +4,7 @@ from cursesmenu import CursesMenu
 from cursesmenu.items import FunctionItem
 from manager.user_manager import UserManager
 
-notes_list = []
-tags_dict = {}
+
 
 @click.group()
 def cli():
@@ -14,6 +13,9 @@ def cli():
 
 users_manager = UserManager()
 
+
+notes_list = []
+tags_dict = {}
 
 @cli.command()
 @click.argument("username")
