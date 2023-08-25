@@ -45,45 +45,16 @@ def edit(note_id, title, content, tags):
 
     notes_manager.edit(note_id, title, content, tags)
     
-    
 @cli.command()
 @click.argument('note_id', type=int)
 def delete(note_id):
-    session = Session()
 
-    note = session.query(Note).get(note_id)
-    if not note:
-        click.echo('Note not found!')
-        session.close()
-        return
+    notes_manager.delete(note_id)
     
-    session.delete(note)
-    session.commit()
-    session.close()
-
-    click.echo('Note deleted successfully!')
-
 @cli.command()
 def interactive():
-    """Interactive menu."""
-    session = Session()
 
-    notes = session.query(Note).all()
+    notes_manager.interactive()
     
-
-    if not notes:
-        click.echo("No notes available.")
-        return
-    
-
-    menu = CursesMenu("Notes", "Choose a note:")
-
-    for note in notes:
-        # menu.append_item(FunctionItem(note.title, lambda x: click.echo(note.content)))
-        def display_note_content(n=note):
-            click.echo(n.content)
-        menu.append_item(FunctionItem(note.title, display_note_content))
-    menu.show()
-
 if __name__ == "__main__":
     cli()
