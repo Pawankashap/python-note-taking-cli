@@ -1,4 +1,6 @@
 from db.models import Session, User, Note, Tag
+from cursesmenu import CursesMenu
+from cursesmenu.items import FunctionItem
 import click
 
 class NoteManager:
@@ -78,3 +80,39 @@ class NoteManager:
         self.session.close()
 
         click.echo('Note edited successfully!')
+
+    def delete(self,note_id):
+        # session = Session()
+
+        note = self.session.query(Note).get(note_id)
+        if not note:
+            click.echo('Note not found!')
+            self.session.close()
+            return
+        
+        self.session.delete(note)
+        self.session.commit()
+        self.session.close()
+
+        click.echo('Note deleted successfully!')
+
+    def interactive(self):
+        """Interactive menu."""
+        # session = Session()
+
+        notes = self.session.query(Note).all()
+        
+
+        if not notes:
+            click.echo("No notes available.")
+            return
+        
+
+        menu = CursesMenu("Notes", "Choose a note:")
+
+        for note in notes:
+            # menu.append_item(FunctionItem(note.title, lambda x: click.echo(note.content)))
+            def display_note_content(n=note):
+                click.echo(n.content)
+            menu.append_item(FunctionItem(note.title, display_note_content))
+        menu.show()
