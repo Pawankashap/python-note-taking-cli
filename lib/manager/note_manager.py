@@ -54,4 +54,27 @@ class NoteManager:
             
         self.session.close()    
     
-   
+    def edit(self,note_id, title, content, tags):
+        # session = Session()
+
+        note = self.session.query(Note).get(note_id)
+        if not note:
+            click.echo('Note not found!')
+            self.session.close()
+            return
+        
+        note.title = title
+        note.content = content
+
+        # Clear existing tags and add new ones
+        note.tags.clear()
+        for tag_name in tags:
+            tag = self.session.query(Tag).filter_by(name=tag_name).first()
+            if not tag:
+                tag = Tag(name=tag_name)
+            note.tags.append(tag)
+        
+        self.session.commit()
+        self.session.close()
+
+        click.echo('Note edited successfully!')
