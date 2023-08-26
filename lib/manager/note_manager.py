@@ -17,24 +17,30 @@ class NoteManager:
             title = input("Enter Note Title: ")
             content = input("Enter Note Content: ")
             tags = input("Enter Tag: ")
-            print(username, title,content,tags)
-            a=input("text: ")
-            user = self.session.query(User).filter_by(username=username).first()
-            if user:
-                note = Note(title=title, content=content, user=user)
-                self.session.add(note)
-                notes_list.append(self.session)
-                tag_names = tags.split(',')
-                for tag_name in tag_names:  # Iterate over the tag names, not the original 'tags' string
-                    tag = self.session.query(Tag).filter_by(name=tag_name).first()
-                    if not tag:
-                        tag = Tag(name=tag_name)
-                    note.tags.append(tag)
-                    tags_dict[tag_name] = note
-                self.session.commit()
-                print(f"Note added successfully!")
+            
+            if not username:
+                print("User name cannot be empty. Please try again.")
+            elif not title:
+                print("Title cannot be empty. Please try again.")
+            elif not content:
+                print("Content cannot be empty. Please try again.")
             else:
-                print(f"User {username} not found.")
+                user = self.session.query(User).filter_by(username=username).first()
+                if user:
+                    note = Note(title=title, content=content, user=user)
+                    self.session.add(note)
+                    notes_list.append(self.session)
+                    tag_names = tags.split(',')
+                    for tag_name in tag_names:  # Iterate over the tag names, not the original 'tags' string
+                        tag = self.session.query(Tag).filter_by(name=tag_name).first()
+                        if not tag:
+                            tag = Tag(name=tag_name)
+                        note.tags.append(tag)
+                        tags_dict[tag_name] = note
+                    self.session.commit()
+                    print(f"Note added successfully!")
+                else:
+                    print(f"User {username} not found.")
             input("Press Enter to return to the main menu...")
 
     def show_notes(self):
@@ -56,40 +62,51 @@ class NoteManager:
         title = input("Enter Note Title: ")
         content = input("Enter Note Content: ")
         tags = input("Enter Tag: ")
-        note = self.session.query(Note).get(note_id)
-        if not note:
-            click.echo('Note not found!')
-            self.session.close()
-            return
-        note.title = title
-        note.content = content
-        note.tags.clear()
-        tag_names = tags.split(',')
-        for tag_name in tag_names:
-            tag = self.session.query(Tag).filter_by(name=tag_name.strip()).first()
-            if not tag:
-                tag = Tag(name=tag_name.strip())
-            note.tags.append(tag)
-            
-        self.session.commit()
-        self.session.close()
 
-        click.echo('Note edited successfully!')
+        if not note_id:
+                print("Note ID cannot be empty. Please try again.")
+        elif not title:
+                print("Title cannot be empty. Please try again.")
+        elif not content:
+                print("Content cannot be empty. Please try again.")
+        else:
+            note = self.session.query(Note).get(note_id)
+            if not note:
+                click.echo('Note not found!')
+                self.session.close()
+                return
+            note.title = title
+            note.content = content
+            note.tags.clear()
+            tag_names = tags.split(',')
+            for tag_name in tag_names:
+                tag = self.session.query(Tag).filter_by(name=tag_name.strip()).first()
+                if not tag:
+                    tag = Tag(name=tag_name.strip())
+                note.tags.append(tag)
+                
+            self.session.commit()
+            self.session.close()
+
+            click.echo('Note edited successfully!')
         input("Press Enter to return to the main menu...")
 
     def delete(self):
         note_id = input("Enter Note ID: ")
-        note = self.session.query(Note).get(note_id)
-        if not note:
-            click.echo('Note not found!')
+        if not note_id:
+                print("Note ID cannot be empty. Please try again.")
+        else:
+            note = self.session.query(Note).get(note_id)
+            if not note:
+                click.echo('Note not found!')
+                self.session.close()
+                return
+            
+            self.session.delete(note)
+            self.session.commit()
             self.session.close()
-            return
-        
-        self.session.delete(note)
-        self.session.commit()
-        self.session.close()
 
-        click.echo('Note deleted successfully!')
+            click.echo('Note deleted successfully!')
         input("Press Enter to return to the main menu...")
 
     def interactive(self):
