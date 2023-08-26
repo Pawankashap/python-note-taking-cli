@@ -24,11 +24,13 @@ class NoteManager:
                 note = Note(title=title, content=content, user=user)
                 self.session.add(note)
                 notes_list.append(self.session)
-                for tag_name in tags:
+                tag_names = tags.split(',')
+                for tag_name in tag_names:  # Iterate over the tag names, not the original 'tags' string
                     tag = self.session.query(Tag).filter_by(name=tag_name).first()
                     if not tag:
                         tag = Tag(name=tag_name)
                     note.tags.append(tag)
+                    tags_dict[tag_name] = note
                 self.session.commit()
                 print(f"Note added successfully!")
             else:
