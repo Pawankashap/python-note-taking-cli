@@ -35,7 +35,7 @@ class NoteManager:
         results = query.all()
 
         for note, username in results:
-            click.echo(f"ID: {note.id} , User: {username} , Title: {note.title} , Content: {note.content} , Tags: {', '.join(tag.name for tag in note.tags)}")
+            click.echo(f"Note ID: {note.id} , User: {username} , Title: {note.title} , Content: {note.content} , Tags: {', '.join(tag.name for tag in note.tags)}")
  
         self.session.close()    
     
