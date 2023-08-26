@@ -11,4 +11,4 @@ class UserManager:
         self.session.add(user)
         self.session.commit()
         print(f"User {username} created!")
-        
+        input("Press Enter to return to the main menu...")
