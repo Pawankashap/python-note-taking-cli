@@ -9,8 +9,6 @@ class NoteManager:
     def __init__(self):
             self.session = Session()
 
-
-
     def add_note(self, username, title, content, tags):
             notes_list = []
             tags_dict = {}
@@ -30,26 +28,39 @@ class NoteManager:
                 print(f"User {username} not found.")
 
     def show_notes(self):
-    # session = Session()
-        notes = self.session.query(Note).all()
-        for note in notes:
-            click.echo(f"ID: {note.id}, Title: {note.title}, Content: {note.content}, Tags: {', '.join(tag.name for tag in note.tags)}")
+        session = Session()
+        # users  id, username
+        # notes 	user_id
+
+        # Note
+        # User
+        # Perform a join between User and Post tables
+        query = session.query(Note, User.username) \
+            .join(User, Note.user_id == User.id)
+
+        # Fetch the results
+        results = query.all()
+
+        for note, username in results:
+            # print(f"Post Title: {note.title}, Content: {note.content}, User: {username}")
+            click.echo(f"ID: {note.id} , User: {username} , Title: {note.title} , Content: {note.content} , Tags: {', '.join(tag.name for tag in note.tags)}")
+            # click.echo(f"ID: {note.id} , User: {username} , Title: {note.title} , Content: {note.content} , Tags: {note.name}")
+
+
+        # notes = self.session.query(Note).all()
+        # for note in notes:
+        #     click.echo(f"ID: {note.id}, Title: {note.title}, Content: {note.content}, Tags: {', '.join(tag.name for tag in note.tags)}")
             
         self.session.close()    
     
     def edit(self,note_id, title, content, tags):
-        # session = Session()
-
         note = self.session.query(Note).get(note_id)
         if not note:
             click.echo('Note not found!')
             self.session.close()
             return
-        
         note.title = title
         note.content = content
-
-        # Clear existing tags and add new ones
         note.tags.clear()
         for tag_name in tags:
             tag = self.session.query(Tag).filter_by(name=tag_name).first()
@@ -63,8 +74,6 @@ class NoteManager:
         click.echo('Note edited successfully!')
 
     def delete(self,note_id):
-        # session = Session()
-
         note = self.session.query(Note).get(note_id)
         if not note:
             click.echo('Note not found!')
@@ -78,21 +87,12 @@ class NoteManager:
         click.echo('Note deleted successfully!')
 
     def interactive(self):
-        """Interactive menu."""
-        # session = Session()
-
         notes = self.session.query(Note).all()
-        
-
         if not notes:
             click.echo("No notes available.")
             return
-        
-
         menu = CursesMenu("Notes", "Choose a note:")
-
         for note in notes:
-            # menu.append_item(FunctionItem(note.title, lambda x: click.echo(note.content)))
             def display_note_content(n=note):
                 click.echo(n.content)
             menu.append_item(FunctionItem(note.title, display_note_content))
