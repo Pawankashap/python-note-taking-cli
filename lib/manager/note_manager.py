@@ -9,9 +9,16 @@ class NoteManager:
     def __init__(self):
             self.session = Session()
 
-    def add_note(self, username, title, content, tags):
+    # def add_note(self, username, title, content, tags):
+    def add_note(self):
             notes_list = []
             tags_dict = {}
+            username = input("Enter User Name: ")
+            title = input("Enter Note Title: ")
+            content = input("Enter Note Content: ")
+            tags = input("Enter Tag: ")
+            print(username, title,content,tags)
+            a=input("text: ")
             user = self.session.query(User).filter_by(username=username).first()
             if user:
                 note = Note(title=title, content=content, user=user)
