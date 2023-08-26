@@ -5,7 +5,6 @@ from cursesmenu.items import FunctionItem
 import click
 
 class NoteManager:
-   
 
     def __init__(self):
             self.session = Session()
