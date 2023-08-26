@@ -29,28 +29,14 @@ class NoteManager:
 
     def show_notes(self):
         session = Session()
-        # users  id, username
-        # notes 	user_id
-
-        # Note
-        # User
-        # Perform a join between User and Post tables
         query = session.query(Note, User.username) \
             .join(User, Note.user_id == User.id)
 
-        # Fetch the results
         results = query.all()
 
         for note, username in results:
-            # print(f"Post Title: {note.title}, Content: {note.content}, User: {username}")
             click.echo(f"ID: {note.id} , User: {username} , Title: {note.title} , Content: {note.content} , Tags: {', '.join(tag.name for tag in note.tags)}")
-            # click.echo(f"ID: {note.id} , User: {username} , Title: {note.title} , Content: {note.content} , Tags: {note.name}")
-
-
-        # notes = self.session.query(Note).all()
-        # for note in notes:
-        #     click.echo(f"ID: {note.id}, Title: {note.title}, Content: {note.content}, Tags: {', '.join(tag.name for tag in note.tags)}")
-            
+ 
         self.session.close()    
     
     def edit(self,note_id, title, content, tags):
