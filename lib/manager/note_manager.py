@@ -62,12 +62,13 @@ class NoteManager:
         note.title = title
         note.content = content
         note.tags.clear()
-        for tag_name in tags:
-            tag = self.session.query(Tag).filter_by(name=tag_name).first()
+        tag_names = tags.split(',')
+        for tag_name in tag_names:
+            tag = self.session.query(Tag).filter_by(name=tag_name.strip()).first()
             if not tag:
-                tag = Tag(name=tag_name)
+                tag = Tag(name=tag_name.strip())
             note.tags.append(tag)
-        
+            
         self.session.commit()
         self.session.close()
 
@@ -88,7 +89,7 @@ class NoteManager:
 
         click.echo('Note deleted successfully!')
         input("Press Enter to return to the main menu...")
-        
+
     def interactive(self):
         notes = self.session.query(Note).all()
         if not notes:
