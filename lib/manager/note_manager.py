@@ -2,6 +2,7 @@ from db.models import Session, User, Note, Tag
 from cursesmenu import CursesMenu
 from sqlalchemy.orm import sessionmaker
 from cursesmenu.items import FunctionItem
+from tabulate import tabulate
 import click
 
 class NoteManager:
@@ -48,13 +49,18 @@ class NoteManager:
             .join(User, Note.user_id == User.id)
 
         results = query.all()
-
+        records_data = []
         for note, username in results:
-            # click.echo(f"Note ID: {note.id} , User: {username} , Title: {note.title} , Content: {note.content} , Tags: {', '.join(tag.name for tag in note.tags)}")
-            print(f"Note ID: {note.id} , User: {username} , Title: {note.title} , Content: {note.content} , Tags: {', '.join(tag.name for tag in note.tags)}")
- 
+            tags_string =', '.join(tag.name for tag in note.tags)
+            records_data.append((note.id,username, note.title, note.content, tags_string))
+        
+        headers = ["ID", "User Name", "Title", "Content", "Tags"]
+        table = tabulate(records_data, headers=headers, tablefmt="grid")
+        print(table)
+
         self.session.close()    
         input("Press Enter to return to the main menu...")
+
     def edit(self):
 
         note_id = input("Enter Note ID: ")

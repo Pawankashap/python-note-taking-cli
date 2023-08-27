@@ -1,11 +1,8 @@
-import click
 import curses
-from db.models import Session, User, Note, Tag
 from cursesmenu import CursesMenu
 from cursesmenu.items import FunctionItem
 from manager.user_manager import UserManager
 from manager.note_manager import NoteManager
-from sqlalchemy.orm import sessionmaker
 
 users_manager = UserManager()
 notes_manager = NoteManager()
