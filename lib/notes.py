@@ -1,4 +1,3 @@
-import click
 import curses
 from db.models import Session, User, Note, Tag
 from cursesmenu import CursesMenu
