@@ -26,7 +26,7 @@ I hope our app simplifies your note-taking experience!
     * pipenv shell
 5. Install Libraries:
     Inside your virtual environment, you can install the required libraries using pipenv.
-    * pipenv install cursesmenu sqlalchemy
+    * pip install curses-menu sqlalchemy tabulate
 
 ## Dependencies
 
