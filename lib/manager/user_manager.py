@@ -1,5 +1,5 @@
 from db.models import Session, User
-
+ 
 class UserManager:
     def __init__(self):
         self.session = Session()

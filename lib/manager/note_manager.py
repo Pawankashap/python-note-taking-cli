@@ -109,7 +109,7 @@ class NoteManager:
             self.session.delete(note)
             self.session.commit()
             self.session.close()
-
+ 
             print('Note deleted successfully!')
         input("Press Enter to return to the main menu...")
 
