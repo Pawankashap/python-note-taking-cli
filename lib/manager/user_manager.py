@@ -1,5 +1,4 @@
 from db.models import Session, User
-import click
 
 class UserManager:
     def __init__(self):

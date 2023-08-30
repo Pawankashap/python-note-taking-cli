@@ -3,7 +3,6 @@ from cursesmenu import CursesMenu
 from sqlalchemy.orm import sessionmaker
 from cursesmenu.items import FunctionItem
 from tabulate import tabulate
-import click
 
 class NoteManager:
 
@@ -77,7 +76,7 @@ class NoteManager:
         else:
             note = self.session.query(Note).get(note_id)
             if not note:
-                click.echo('Note not found!')
+                print('Note not found!')
                 self.session.close()
                 return
             note.title = title
@@ -93,7 +92,7 @@ class NoteManager:
             self.session.commit()
             self.session.close()
 
-            click.echo('Note edited successfully!')
+            print('Note edited successfully!')
         input("Press Enter to return to the main menu...")
 
     def delete(self):
@@ -103,7 +102,7 @@ class NoteManager:
         else:
             note = self.session.query(Note).get(note_id)
             if not note:
-                click.echo('Note not found!')
+                print('Note not found!')
                 self.session.close()
                 return
             
@@ -111,17 +110,17 @@ class NoteManager:
             self.session.commit()
             self.session.close()
 
-            click.echo('Note deleted successfully!')
+            print('Note deleted successfully!')
         input("Press Enter to return to the main menu...")
 
     def interactive(self):
         notes = self.session.query(Note).all()
         if not notes:
-            click.echo("No notes available.")
+            print("No notes available.")
             return
         menu = CursesMenu("Notes", "Choose a note:")
         for note in notes:
             def display_note_content(n=note):
-                click.echo(n.content)
+                print(n.content)
             menu.append_item(FunctionItem(note.title, display_note_content))
         menu.show()
